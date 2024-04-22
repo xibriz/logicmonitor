@@ -273,6 +273,9 @@ AUTO_BALANCE_COLLECTOR_GROUP_ID = "autoBalancedCollectorGroupId"
 ENABLE_NETFLOW = "enableNetflow"
 NETFLOW_COLLECTOR_GROUP_ID = "netflowCollectorGroupId"
 NETFLOW_COLLECTOR_ID = "netflowCollectorId"
+ENABLE_LOG = "isPreferredLogCollectorConfigured"
+LOG_COLLECTOR_GROUP_ID = "logCollectorGroupId"
+LOG_COLLECTOR_ID = "logCollectorId"
 
 class Device(LogicMonitorBaseModule):
 
@@ -306,6 +309,9 @@ class Device(LogicMonitorBaseModule):
             enable_netflow=dict(required=False, type="bool", choices=[True, False]),
             netflow_collector_group_id=dict(required=False, type="int"),
             netflow_collector_id=dict(required=False, type="int"),
+            enable_log=dict(required=False, type="bool", choices=[True, False]),
+            log_collector_group_id=dict(required=False, type="int"),
+            log_collector_id=dict(required=False, type="int"),
             groups=dict(required=False, type="list", elements="str"),
             description=dict(required=False),
             disable_alerting=dict(required=False, type="bool", choices=[True, False]),
@@ -340,6 +346,9 @@ class Device(LogicMonitorBaseModule):
         self.enable_netflow = self.params[self.ModuleFields.ENABLE_NETFLOW]
         self.netflow_collector_group_id = self.params[self.ModuleFields.NETFLOW_COLLECTOR_GROUP_ID]
         self.netflow_collector_id = self.params[self.ModuleFields.NETFLOW_COLLECTOR_ID]
+        self.enable_log = self.params[self.ModuleFields.ENABLE_LOG]
+        self.log_collector_group_id = self.params[self.ModuleFields.LOG_COLLECTOR_GROUP_ID]
+        self.log_collector_id = self.params[self.ModuleFields.LOG_COLLECTOR_ID]
         self.groups = self.process_groups(self.params[self.ModuleFields.GROUPS])
         self.description = self.params[self.ModuleFields.DESCRIPTION]
         self.disable_alerting = self.params[self.ModuleFields.DISABLE_ALERTING]
@@ -547,6 +556,12 @@ class Device(LogicMonitorBaseModule):
             data[ENABLE_NETFLOW] = self.enable_netflow
             data[NETFLOW_COLLECTOR_GROUP_ID] = self.netflow_collector_group_id
             data[NETFLOW_COLLECTOR_ID] = self.netflow_collector_id
+        if self.enable_log is False:
+            data[ENABLE_LOG] = self.enable_log
+        if self.enable_log is True:
+            data[ENABLE_LOG] = self.enable_log
+            data[LOG_COLLECTOR_GROUP_ID] = self.log_collector_group_id
+            data[LOG_COLLECTOR_ID] = self.log_collector_id
         return data
 
     def build_collector_data(self, data):
